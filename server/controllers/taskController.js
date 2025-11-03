@@ -1,4 +1,5 @@
 import prisma from "../configs/prisma.js"
+import { inngest } from "../inngest/index.js";
 
 // create task
 export const createTask = async (req, res) => {
@@ -35,6 +36,13 @@ export const createTask = async (req, res) => {
         const taskWithAssignee = await prisma.task.findUnique({
             where: {id: task.id},
             include: {assignee: true}
+        })
+        
+        await inngest.send({
+            name: "app/task.assigned",
+            data: {
+                taskId: task.id, origin
+            }
         })
 
         res.json({task: taskWithAssignee, message: "Task created successfully"})
@@ -75,7 +83,7 @@ export const updateTask = async (req, res) => {
         }
 
        const updatedTask = await prisma.task.update({
-            where: {id: req.params.id}
+            where: {id: req.params.id},
             data: req.body
        })
        
@@ -119,7 +127,7 @@ export const deleteTask = async (req, res) => {
             where: {id: {in: tasksIds}}
        })
 
-        res.json({message: "Task deleted successfully"})
+        res.json({message: "Task delete successfully"})
 
     } catch (error) {
         console.log(error);
