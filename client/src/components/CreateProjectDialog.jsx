@@ -9,7 +9,7 @@ import { addProject } from "../features/workspaceSlice";
 const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
 
     const {getToken} = useAuth()
-    const dispach = useDispatch()
+    const dispatch = useDispatch()
 
     const { currentWorkspace } = useSelector((state) => state.workspace);
 
@@ -37,8 +37,8 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
 
             const {data} = await api.post("/api/projects", {workspaceId: currentWorkspace.id, ...formData}, {headers: {Authorization: `Bearer ${await getToken()}`}})
             
-            dispach(addProject(data.project))
-            setIsSubmitting(false)
+            dispatch(addProject(data.project))
+            setIsDialogOpen(false)
         } catch (error){
             toast.error(error?.response?.data?.message || error.message)
         }
