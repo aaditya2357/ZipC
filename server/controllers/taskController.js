@@ -98,7 +98,7 @@ export const updateTask = async (req, res) => {
 }
 
 
-// delete task
+// delete taskh
 export const deleteTask = async (req, res) => {
     try {
 
